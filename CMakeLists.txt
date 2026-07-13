@@ -80,6 +80,14 @@ elseif(SUDOKU_BACKEND STREQUAL "fbink")
     message(FATAL_ERROR "FBInk not built. Run tools/build-fbink.sh first (see quickstart.md).")
   endif()
 
+  # FBInk's KOBO build resolves I2C (e.g. query_accelerometer) against its own
+  # vendored/staged libi2c.a rather than bundling those symbols into
+  # libfbink.a itself, so consumers must link it too.
+  set(FBINK_I2C_LIB "${CMAKE_SOURCE_DIR}/third_party/FBInk/libi2c-staged/lib/libi2c.a")
+  if(NOT EXISTS "${FBINK_I2C_LIB}")
+    message(FATAL_ERROR "FBInk's staged libi2c.a not found. Run tools/build-fbink.sh first (see quickstart.md).")
+  endif()
+
   add_executable(sudoku
     src/main.cpp
     src/platform/softcanvas.cpp
@@ -88,7 +96,7 @@ elseif(SUDOKU_BACKEND STREQUAL "fbink")
   )
   target_compile_definitions(sudoku PRIVATE SUDOKU_BACKEND_FBINK)
   target_include_directories(sudoku PRIVATE third_party/FBInk)
-  target_link_libraries(sudoku PRIVATE sudoku_ui sudoku_persist "${FBINK_LIB}" m rt pthread)
+  target_link_libraries(sudoku PRIVATE sudoku_ui sudoku_persist "${FBINK_LIB}" "${FBINK_I2C_LIB}" m rt pthread)
 endif()
 
 if(BUILD_TESTS)

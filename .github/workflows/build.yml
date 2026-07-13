@@ -46,13 +46,15 @@ jobs:
           path: ~/x-tools/arm-kobo-linux-gnueabihf
           key: koxtoolchain-kobo-${{ steps.koxtc.outputs.tag }}
 
+      # The release tarball's own top-level directory is "x-tools/", so it
+      # must be unpacked into $HOME (not $HOME/x-tools) to land at the
+      # expected $HOME/x-tools/arm-kobo-linux-gnueabihf.
       - name: Download & unpack koxtoolchain (kobo)
         if: steps.cache-koxtc.outputs.cache-hit != 'true'
         run: |
           curl -L -o kobo.tar.gz \
             "https://github.com/koreader/koxtoolchain/releases/download/${{ steps.koxtc.outputs.tag }}/kobo.tar.gz"
-          mkdir -p "$HOME/x-tools"
-          tar -xzf kobo.tar.gz -C "$HOME/x-tools"
+          tar -xzf kobo.tar.gz -C "$HOME"
 
       - name: Build FBInk (static, cross)
         run: tools/build-fbink.sh

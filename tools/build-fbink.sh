@@ -4,7 +4,7 @@
 # ~/x-tools location. Produces third_party/FBInk/Release/libfbink.a.
 set -e
 
-FBINK_TAG="${FBINK_TAG:-v1.25.5}"
+FBINK_TAG="${FBINK_TAG:-v1.25.0}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIR="$ROOT/third_party/FBInk"
 TC_TRIPLE=arm-kobo-linux-gnueabihf

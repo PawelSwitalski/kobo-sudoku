@@ -37,12 +37,12 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 [P] Define `Renderer` interface (`DisplayInfo`, `fillRect`, `drawText`, `drawLine`, `flushPartial`, `flushFull`, `Gray`/`Color`/`TextStyle`/`Rect` types) in `src/platform/renderer.h` per contracts/platform-abstraction.md
-- [ ] T007 [P] Define `TouchInput` interface (`Tap`, `waitForTap(timeoutMs)`) in `src/platform/input.h` per contracts/platform-abstraction.md
-- [ ] T008 SDL2 simulator backend: window renderer with e-ink flash simulation on `flushFull` in `src/platform/sdl/sdl_renderer.{h,cpp}`, mouse-click `TouchInput` in `src/platform/sdl/mouse_touch.{h,cpp}`; `--width/--height/--dpi` flags
-- [ ] T009 [P] Theme & metrics: grayscale-first styles, DPI-relative sizes (cell, pad button; minimum touch target ≥ 9 mm — ~106 px @300 dpi, ~75 px @212 dpi), bundled TTF font loading in `src/ui/theme.{h,cpp}` + font asset in `dist/.adds/sudoku/assets/`
-- [ ] T010 Base widgets: `Button`, `Label`, modal `Dialog` (confirm/info) with hit-testing in `src/ui/widgets.{h,cpp}` (uses Renderer only — no OS calls, Constitution I)
-- [ ] T011 App shell: main loop (tap → hit-test → update → flush), screen-stack manager, clean-exit path returning 0, backend selection in `src/main.cpp` + `src/ui/screens/screen.h`
+- [x] T006 [P] Define `Renderer` interface (`DisplayInfo`, `fillRect`, `drawText`, `drawLine`, `flushPartial`, `flushFull`, `Gray`/`Color`/`TextStyle`/`Rect` types) in `src/platform/renderer.h` per contracts/platform-abstraction.md
+- [x] T007 [P] Define `TouchInput` interface (`Tap`, `waitForTap(timeoutMs)`) in `src/platform/input.h` per contracts/platform-abstraction.md
+- [x] T008 SDL2 simulator backend: window renderer with e-ink flash simulation on `flushFull` in `src/platform/sdl/sdl_renderer.{h,cpp}`, mouse-click `TouchInput` in `src/platform/sdl/mouse_touch.{h,cpp}`; `--width/--height/--dpi` flags
+- [x] T009 [P] Theme & metrics: grayscale-first styles, DPI-relative sizes (cell, pad button; minimum touch target ≥ 9 mm — ~106 px @300 dpi, ~75 px @212 dpi), bundled TTF font loading in `src/ui/theme.{h,cpp}` + font asset in `dist/.adds/sudoku/assets/`
+- [x] T010 Base widgets: `Button`, `Label`, modal `Dialog` (confirm/info) with hit-testing in `src/ui/widgets.{h,cpp}` (uses Renderer only — no OS calls, Constitution I)
+- [x] T011 App shell: main loop (tap → hit-test → update → flush), screen-stack manager, clean-exit path returning 0, backend selection in `src/main.cpp` + `src/ui/screens/screen.h`
 
 **Checkpoint**: Simulator opens, shows an empty screen with a working button — user story implementation can now begin
 
@@ -67,9 +67,9 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 - [x] T017 [US1] Logical-technique solver (naked/hidden singles, locked candidates, naked pairs) + `grade()` mapping to Easy/Medium/Hard in `src/core/difficulty.{h,cpp}` (research R6)
 - [x] T018 [US1] Generator: dig-holes-with-uniqueness-check pipeline, regenerate until requested band, `Puzzle{givens,solution,difficulty,seed}` in `src/core/generator.{h,cpp}` (must meet SC-001 < 5 s; target < 500 ms)
 - [x] T019 [US1] Session: cell-first mutators `commitDigit`/`clearCell` returning `ChangeSet`, given-cell no-ops, `isComplete()`, `tick()` elapsed-time accumulator in `src/core/session.{h,cpp}` per contracts/core-model.md
-- [ ] T020 [US1] Board view widget: 9×9 grid with thick 3×3 boundaries, bold givens vs normal entries, selection border, per-cell dirty rects for partial refresh in `src/ui/widgets.{h,cpp}` (stretch, may skip: tapping a filled cell highlights same-digit cells — spec edge case "may")
-- [ ] T021 [US1] Game screen: board + always-visible 1–9 pad + clear button, cell-first flow, busy indicator during generation, completion dialog in `src/ui/screens/game_screen.{h,cpp}`
-- [ ] T022 [US1] Menu screen: New Game → difficulty picker (Easy/Medium/Hard), Exit; wire into app shell in `src/ui/screens/menu_screen.{h,cpp}`
+- [x] T020 [US1] Board view widget: 9×9 grid with thick 3×3 boundaries, bold givens vs normal entries, selection border, per-cell dirty rects for partial refresh in `src/ui/widgets.{h,cpp}` (stretch, may skip: tapping a filled cell highlights same-digit cells — spec edge case "may")
+- [x] T021 [US1] Game screen: board + always-visible 1–9 pad + clear button, cell-first flow, busy indicator during generation, completion dialog in `src/ui/screens/game_screen.{h,cpp}`
+- [x] T022 [US1] Menu screen: New Game → difficulty picker (Easy/Medium/Hard), Exit; wire into app shell in `src/ui/screens/menu_screen.{h,cpp}`
 
 **Checkpoint**: Full game playable start-to-finish in the desktop simulator
 
@@ -109,8 +109,8 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 ### Implementation for User Story 2
 
 - [x] T032 [US2] Core marks: 9-bit `marks` on Cell, `toggleMark()`, commit-time own-cell clear + peer cleanup with full ChangeSet in `src/core/board.{h,cpp}` and `src/core/session.{h,cpp}`
-- [ ] T033 [US2] Mark rendering: small digits at fixed 3×3 in-cell slots (1–3 top / 4–6 middle / 7–9 bottom), legible at smallest supported cell size in `src/ui/widgets.{h,cpp}` (board view)
-- [ ] T034 [US2] Pencil-mode toggle on the game screen: mode button with clear visual state; pad taps route to `toggleMark` in pencil mode in `src/ui/screens/game_screen.{h,cpp}`
+- [x] T033 [US2] Mark rendering: small digits at fixed 3×3 in-cell slots (1–3 top / 4–6 middle / 7–9 bottom), legible at smallest supported cell size in `src/ui/widgets.{h,cpp}` (board view)
+- [x] T034 [US2] Pencil-mode toggle on the game screen: mode button with clear visual state; pad taps route to `toggleMark` in pencil mode in `src/ui/screens/game_screen.{h,cpp}`
 
 **Checkpoint**: Pencil-mark workflow fully usable on top of US1
 
@@ -131,8 +131,8 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 - [x] T036 [P] [US4] Data directory resolution (device `.adds/sudoku/`, host override via env/flag) in `src/persist/paths.{h,cpp}`
 - [x] T037 [US4] Atomic JSON store: write-temp → fsync → rename, load-with-validation → `std::optional` (invalid ⇒ absent, FR-018) in `src/persist/store.{h,cpp}`
 - [x] T038 [US4] Session serialization `toJson()`/`fromJson()` exactly per contracts/save-format.md (`save.json` schema v1) in `src/core/session.{h,cpp}`
-- [ ] T039 [US4] Wiring: save after every mutator on the game screen; Continue entry on menu (only when a valid save exists); new-game-discards-save confirmation dialog (FR-019); save+exit on SIGTERM in `src/ui/screens/{menu_screen,game_screen}.cpp`, `src/main.cpp`
-- [ ] T040 [US4] Sleep-time exclusion: only accumulate active time into `elapsedSeconds` (wall-clock deltas capped/paused when no events — device sleep must not count, per spec edge case) in `src/core/session.{h,cpp}` + app loop
+- [x] T039 [US4] Wiring: save after every mutator on the game screen; Continue entry on menu (only when a valid save exists); new-game-discards-save confirmation dialog (FR-019); save+exit on SIGTERM in `src/ui/screens/{menu_screen,game_screen}.cpp`, `src/main.cpp`
+- [x] T040 [US4] Sleep-time exclusion: only accumulate active time into `elapsedSeconds` (wall-clock deltas capped/paused when no events — device sleep must not count, per spec edge case) in `src/core/session.{h,cpp}` + app loop
 
 **Checkpoint**: Close/reopen/power-cycle resumes identically; corrupt save degrades gracefully
 
@@ -151,7 +151,7 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 ### Implementation for User Story 3
 
 - [x] T042 [US3] Core: derived `isError(cell)`, `applyHint()` per contracts/core-model.md in `src/core/session.{h,cpp}`
-- [ ] T043 [US3] UI: grayscale-safe error rendering (cell shading + digit style — no color-only signal, Constitution II), hint button with "nothing to do" feedback, hint-cell marker, hints count on completion dialog (FR-009) in `src/ui/widgets.{h,cpp}` + `src/ui/screens/game_screen.{h,cpp}`
+- [x] T043 [US3] UI: grayscale-safe error rendering (cell shading + digit style — no color-only signal, Constitution II), hint button with "nothing to do" feedback, hint-cell marker, hints count on completion dialog (FR-009) in `src/ui/widgets.{h,cpp}` + `src/ui/screens/game_screen.{h,cpp}`
 
 **Checkpoint**: Assists complete; mistakes surface immediately and hints unstick the player
 
@@ -169,11 +169,11 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Implementation for User Story 5
 
-- [ ] T045 [P] [US5] Stats & settings persistence per contracts/save-format.md (`stats.json`, `settings.json`, schema v1, unknown-key preservation) in `src/persist/store.{h,cpp}` + small models in `src/core/stats.{h,cpp}`
-- [ ] T046 [US5] In-game timer display: minute-granularity updates via input timeout ticks (Constitution II — no per-second redraws), honoring `showTimer` in `src/ui/screens/game_screen.{h,cpp}`
-- [ ] T047 [P] [US5] Statistics screen (per-difficulty completed/best/average) in `src/ui/screens/stats_screen.{h,cpp}`; menu entry
-- [ ] T048 [P] [US5] Settings screen (`showTimer` toggle) in `src/ui/screens/settings_screen.{h,cpp}`; menu entry
-- [ ] T049 [US5] Completion pipeline: record stats on `Completed`, delete `save.json`, show solve time on completion dialog when enabled in `src/ui/screens/game_screen.cpp`
+- [x] T045 [P] [US5] Stats & settings persistence per contracts/save-format.md (`stats.json`, `settings.json`, schema v1, unknown-key preservation) in `src/persist/store.{h,cpp}` + small models in `src/core/stats.{h,cpp}`
+- [x] T046 [US5] In-game timer display: minute-granularity updates via input timeout ticks (Constitution II — no per-second redraws), honoring `showTimer` in `src/ui/screens/game_screen.{h,cpp}`
+- [x] T047 [P] [US5] Statistics screen (per-difficulty completed/best/average) in `src/ui/screens/stats_screen.{h,cpp}`; menu entry
+- [x] T048 [P] [US5] Settings screen (`showTimer` toggle) in `src/ui/screens/settings_screen.{h,cpp}`; menu entry
+- [x] T049 [US5] Completion pipeline: record stats on `Completed`, delete `save.json`, show solve time on completion dialog when enabled in `src/ui/screens/game_screen.cpp`
 
 **Checkpoint**: All six user stories functional
 

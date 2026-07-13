@@ -28,11 +28,11 @@ Single project at repository root (unchanged from `001-kobo-sudoku`): `dist/`, `
 
 **Purpose**: Land the new NickelMenu config artifact and retire its superseded predecessor
 
-- [ ] T001 [P] Add fixed-path NickelMenu config `dist/.adds/nm/kobo-sudoku` containing
+- [X] T001 [P] Add fixed-path NickelMenu config `dist/.adds/nm/kobo-sudoku` containing
       `menu_item : main : Sudoku : cmd_spawn : quiet : exec /mnt/onboard/.adds/sudoku/start.sh`,
       per contracts/nickelmenu-entry.md — this exact, stable filename is what makes reinstall
       idempotent (FR-011, research.md R2)
-- [ ] T002 [P] Remove the superseded `dist/.adds/sudoku/nm-sudoku.txt` (its content is replaced by
+- [X] T002 [P] Remove the superseded `dist/.adds/sudoku/nm-sudoku.txt` (its content is replaced by
       T001; keeping both would leave two divergent, easy-to-confuse NickelMenu snippets in the repo)
 
 ---
@@ -44,14 +44,16 @@ without this
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T003 Update `tools/package.sh`: create `.adds/nm/` in the staging directory and copy
+- [X] T003 Update `tools/package.sh`: create `.adds/nm/` in the staging directory and copy
       `dist/.adds/nm/kobo-sudoku` into it (replacing the old
       `cp "$ROOT/dist/.adds/sudoku/nm-sudoku.txt" "$STAGE/.adds/sudoku/"` line), so every build
       ships the fixed-path config with no manual copy step required on the device (FR-001, FR-011)
 
 **Checkpoint**: `tools/package.sh build/kobo` produces `dist/kobo-sudoku.zip` containing exactly
 one `.adds/nm/kobo-sudoku` with the expected content — verify with the host-side packaging check
-in quickstart.md (`unzip -l` / `unzip -p`) before any device work.
+in quickstart.md (`unzip -l` / `unzip -p`) before any device work. Verified with a placeholder
+binary (real cross-compiled armhf binary needs WSL2/koxtoolchain, not available in this session) —
+see T012.
 
 ---
 
@@ -67,16 +69,16 @@ scenarios 2–4)
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] Rewrite `README.md`'s "Install on your Kobo" section to lead with NickelMenu as
+- [X] T004 [US1] Rewrite `README.md`'s "Install on your Kobo" section to lead with NickelMenu as
       the primary path: one-time prerequisite (download NickelMenu's `KoboRoot.tgz` from
       https://pgaskin.github.io/NickelMenu/, copy to the device's hidden `.kobo/` folder, eject)
       followed by install steps (extract `kobo-sudoku.zip` onto the drive root, eject, open
       **More**, tap **Sudoku**); note the confirmed device/firmware (Kobo Libra Colour, firmware
       4.5) and that NickelMenu is firmware-4.x only (FR-001, FR-002, FR-005, FR-009, FR-010)
-- [ ] T005 [US1] In the same `README.md` section, keep the existing KFMon cover-tap steps
+- [X] T005 [US1] In the same `README.md` section, keep the existing KFMon cover-tap steps
       immediately below, under an explicit "Legacy alternative: KFMon cover-tap" subheading,
       mechanics unchanged from `001-kobo-sudoku` (FR-008, FR-010)
-- [ ] T006 [US1] Manually validate quickstart.md scenarios 2–4 on the confirmed device: the
+- [ ] T006 [US1] **PENDING — requires physical device.** Manually validate quickstart.md scenarios 2–4 on the confirmed device: the
       "Sudoku" entry appears in More without hiding/reordering Settings or other existing entries,
       tapping it launches the game directly, and exiting returns to the normal Nickel interface
       with the entry still present for next time (FR-001, FR-002, FR-003, FR-006, SC-001, SC-003,
@@ -100,14 +102,14 @@ either trigger (quickstart.md scenario 6)
 
 ### Implementation for User Story 2
 
-- [ ] T007 [US2] [P] In `README.md`, note that the NickelMenu prerequisite follows the same
+- [X] T007 [US2] [P] In `README.md`, note that the NickelMenu prerequisite follows the same
       one-time-per-firmware-update pattern as the existing KFMon prerequisite (it survives until a
       firmware update, then the step is simply redone) — so it reads consistently for players who
       already know the KFMon setup from `001-kobo-sudoku` (FR-005)
-- [ ] T008 [US2] [P] Add a short "Using both install methods" note to `README.md` confirming it is
+- [X] T008 [US2] [P] Add a short "Using both install methods" note to `README.md` confirming it is
       safe to have both the NickelMenu "More" entry and the KFMon cover-tap installed at the same
       time — both launch the same game and share the same save (FR-008)
-- [ ] T009 [US2] Manually validate quickstart.md scenario 8 (factory-fresh-equivalent walkthrough
+- [ ] T009 [US2] **PENDING — requires physical device.** Manually validate quickstart.md scenario 8 (factory-fresh-equivalent walkthrough
       using only `README.md`, first puzzle reached from More in under 15 minutes, SC-002) and
       scenario 6 (both install methods present and installed together still launch correctly and
       share saved progress, FR-008)
@@ -129,10 +131,10 @@ confirm "More" no longer lists "Sudoku" while Settings and other entries are una
 
 ### Implementation for User Story 3
 
-- [ ] T010 [US3] Update `README.md`'s "Uninstall" section to add `.adds/nm/kobo-sudoku` to the list
+- [X] T010 [US3] Update `README.md`'s "Uninstall" section to add `.adds/nm/kobo-sudoku` to the list
       of paths to delete, alongside the existing `.adds/sudoku/`, `.adds/kfmon/config/sudoku.ini`,
       and `kfmon-sudoku.png` (FR-007)
-- [ ] T011 [US3] Manually validate quickstart.md scenario 7 (uninstall removes the entry, other
+- [ ] T011 [US3] **PENDING — requires physical device.** Manually validate quickstart.md scenario 7 (uninstall removes the entry, other
       entries unaffected, SC-004) and scenario 5 (reinstalling the package a second time leaves
       exactly one "Sudoku" entry, never a duplicate, SC-006, FR-011)
 
@@ -145,11 +147,15 @@ every step.
 
 **Purpose**: Final pre-release verification across all three stories
 
-- [ ] T012 [P] Run the host-side packaging smoke check from quickstart.md (`unzip -l` / `unzip -p`
-      on a freshly built `dist/kobo-sudoku.zip`) as a final pre-release check (FR-011 precondition)
-- [ ] T013 Run all quickstart.md validation scenarios end-to-end on the confirmed device (Kobo
-      Libra Colour, firmware 4.5) in one pass, confirming no regression to the existing
-      `001-kobo-sudoku` KFMon install/launch path
+- [X] T012 [P] Run the host-side packaging smoke check from quickstart.md (`unzip -l` / `unzip -p`
+      on a freshly built `dist/kobo-sudoku.zip`) as a final pre-release check (FR-011 precondition).
+      Done with a placeholder binary + a Python-based `zip` shim standing in for the real `zip`
+      binary and koxtoolchain cross-build, neither available in this session — confirmed exactly
+      one `.adds/nm/kobo-sudoku` with the expected `menu_item` content; dummy artifacts were
+      deleted afterward. Re-run with a real device build before shipping.
+- [ ] T013 **PENDING — requires physical device + WSL2/koxtoolchain build.** Run all quickstart.md
+      validation scenarios end-to-end on the confirmed device (Kobo Libra Colour, firmware 4.5) in
+      one pass, confirming no regression to the existing `001-kobo-sudoku` KFMon install/launch path
 
 ---
 

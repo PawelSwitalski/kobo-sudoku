@@ -15,26 +15,48 @@ timer redraws.
 
 ## Install on your Kobo
 
-**One-time prerequisite — KFMon** (the launcher; survives until a firmware
-update, then just redo this step):
+**One-time prerequisite — NickelMenu** (lets Nickel show a custom entry in
+**More**; survives until a firmware update, then just redo this step — the
+same one-time-per-firmware-update pattern as the legacy KFMon setup below,
+if that's familiar from an earlier install):
 
-1. Download the latest `KoboRoot.tgz` from
-   [KFMon releases](https://github.com/NiLuJe/kfmon/releases) (the
-   "uninstaller-less" package is fine).
+1. Download the latest `KoboRoot.tgz` from the
+   [NickelMenu project](https://pgaskin.github.io/NickelMenu/) (firmware
+   4.x only — confirmed working on a Kobo Libra Colour, firmware 4.5;
+   other firmware versions are best-effort, see the legacy alternative
+   below).
 2. Connect the Kobo over USB, copy `KoboRoot.tgz` into the hidden `.kobo`
    folder on the device, eject safely. The Kobo reboots and installs it.
 
 **Install the game:**
 
 1. Connect the Kobo over USB (it shows up as a drive, e.g. `D:`).
-2. Extract `kobo-sudoku.zip` onto the drive root (merge the `.adds` folder;
-   `kfmon-sudoku.png` lands at the root).
+2. Extract `kobo-sudoku.zip` onto the drive root (merge the `.adds` folder).
 3. Eject safely and let the Kobo finish importing.
-4. A book called **kfmon-sudoku** appears in your library. Tap its cover —
-   the game starts. Tap `Menu → Exit` to go back to your books.
+4. Open **More** (bottom navigation) — a **Sudoku** entry appears alongside
+   Settings and your other items. Tap it to start the game. Tap
+   `Menu → Exit` to go back to your books.
 
-**Uninstall:** delete `.adds/sudoku/`, `.adds/kfmon/config/sudoku.ini` and
-`kfmon-sudoku.png` from the device.
+**Uninstall:** delete `.adds/sudoku/`, `.adds/nm/kobo-sudoku`,
+`.adds/kfmon/config/sudoku.ini` and `kfmon-sudoku.png` from the device.
+
+### Legacy alternative: KFMon cover-tap
+
+Kobo Sudoku can also be launched the way earlier versions worked, via
+[KFMon](https://github.com/NiLuJe/kfmon) and a disguised library cover. No
+extra install step is needed beyond the steps above — the `.adds/kfmon/`
+config and `kfmon-sudoku.png` cover ship in the same zip — only the KFMon
+prerequisite below is new if you don't already have it set up.
+
+1. **One-time prerequisite — KFMon**: download the latest `KoboRoot.tgz`
+   from [KFMon releases](https://github.com/NiLuJe/kfmon/releases) (the
+   "uninstaller-less" package is fine), copy it into `.kobo` on the device,
+   eject. The Kobo reboots and installs it.
+2. After installing the game (steps above), a book called **kfmon-sudoku**
+   appears in your library. Tap its cover — the game starts.
+
+Both methods are independent and can be installed at the same time: either
+one launches the same game and resumes the same saved progress.
 
 ## How to play
 

@@ -11,10 +11,10 @@ OUT="$ROOT/dist/kobo-sudoku.zip"
 
 [ -f "$BIN" ] || { echo "!! $BIN not found — build the fbink flavor first"; exit 1; }
 
-mkdir -p "$STAGE/.adds/sudoku/assets" "$STAGE/.adds/kfmon/config"
+mkdir -p "$STAGE/.adds/sudoku/assets" "$STAGE/.adds/kfmon/config" "$STAGE/.adds/nm"
 cp "$BIN"                                   "$STAGE/.adds/sudoku/sudoku"
 cp "$ROOT/dist/.adds/sudoku/start.sh"       "$STAGE/.adds/sudoku/"
-cp "$ROOT/dist/.adds/sudoku/nm-sudoku.txt"  "$STAGE/.adds/sudoku/"
+cp "$ROOT/dist/.adds/nm/kobo-sudoku"        "$STAGE/.adds/nm/"
 cp "$ROOT"/dist/.adds/sudoku/assets/*       "$STAGE/.adds/sudoku/assets/"
 cp "$ROOT/dist/kfmon/config/sudoku.ini"     "$STAGE/.adds/kfmon/config/"
 cp "$ROOT/dist/kfmon-sudoku.png"            "$STAGE/kfmon-sudoku.png"

@@ -8,13 +8,20 @@
 
 **Input**: User description: "I have already connected Kobo libra color, firmware version 4.5... you can check. It is displayed as a D: You have a two different way to instal own software on Kobo. I found you can base on `NickelMenu`. You can check this solution and implement own. I would like to place my \"Sudoku\" game inside the section 'More'. There are some settings and program alright. Remember I want you to implement your own solution. Only base on library that I mentioned. All changes commit on separate git branch"
 
+## Clarifications
+
+### Session 2026-07-13
+
+- Q: With this feature, players will have two launch methods installed side by side (the existing KFMon cover-tap from 001, and this new NickelMenu "More" entry). Should documentation present one as primary/recommended? → A: Make the "More" entry the primary/recommended method; keep the KFMon cover-tap documented as a legacy/alternative for players who already have it set up.
+- Q: If a player reinstalls/upgrades the package later (copies the files again over USB), should the spec explicitly guarantee exactly one "Sudoku" entry survives in "More" (no duplicates)? → A: Yes — add an explicit requirement.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Launch Sudoku from the Kobo "More" menu (Priority: P1)
 
 The player opens their Kobo, taps the built-in "More" screen (the same screen that lists Settings and other on-device items), sees a "Sudoku" entry alongside those existing items, and taps it to launch the game directly — no separate trigger (such as tapping a disguised book cover) is needed.
 
-**Why this priority**: This is the entire point of the feature — a discoverable, native-feeling launch point. Without it, the game is only reachable through the existing library-cover trigger, which is what this feature is meant to improve on.
+**Why this priority**: This is the entire point of the feature — a discoverable, native-feeling launch point, and it becomes the primary recommended way to launch the game going forward, with the existing library-cover trigger kept only as a legacy alternative.
 
 **Independent Test**: Can be fully tested by installing the package on the device, opening "More", confirming "Sudoku" is listed alongside Settings and any other existing entries, tapping it, and observing the game start.
 
@@ -62,6 +69,7 @@ A player who no longer wants the game removes it from their device and expects n
 - What happens if the player's firmware version does not support the prerequisite tool? Documentation states the confirmed-working firmware; behavior on other versions is best-effort, consistent with the existing portability stance for other Kobo models.
 - What happens if the "More" screen already has many entries from other add-ons? The Sudoku entry must appear as one additional row without displacing or corrupting existing ones.
 - What happens if the player installs this "More" entry without removing the earlier KFMon cover-tap trigger? Both remain available and independently functional, launching the same game and sharing the same save (see User Story 2, Scenario 3).
+- What happens if the player reinstalls or upgrades the package (copies its files over again)? Exactly one "Sudoku" entry remains in "More" afterward — the reinstall MUST NOT leave a duplicate or stale second entry.
 
 ## Requirements *(mandatory)*
 
@@ -76,6 +84,8 @@ A player who no longer wants the game removes it from their device and expects n
 - **FR-007**: Uninstalling the game MUST remove the "Sudoku" entry from "More" along with the game's other files, leaving no residual or non-functional entry behind.
 - **FR-008**: The "More" launch entry MUST coexist with the existing KFMon-based cover-tap launch method without conflict; both, where installed together, MUST launch the same game and operate on the same saved progress.
 - **FR-009**: The system MUST document the confirmed device and firmware combination on which this launch method is verified to work, consistent with the project's existing best-effort stance on other Kobo models and firmware versions.
+- **FR-010**: Installation and setup documentation MUST present the NickelMenu "More" entry as the primary, recommended installation and launch method; the existing KFMon cover-tap method (from `001-kobo-sudoku`) MUST remain documented only as a legacy/alternative option for players who already have it set up.
+- **FR-011**: Reinstalling or upgrading the package (copying its files to the device again) MUST result in exactly one "Sudoku" entry in "More" — never a duplicate or a second, stale entry.
 
 ### Key Entities
 
@@ -90,12 +100,13 @@ A player who no longer wants the game removes it from their device and expects n
 - **SC-003**: 100% of taps on the "Sudoku" entry in "More" launch the game (or resume the in-progress session) without error, across repeated launches.
 - **SC-004**: After following the documented uninstall steps, 0% of test installs show a residual "Sudoku" entry in "More".
 - **SC-005**: Existing "More" entries (e.g., Settings) remain visible, correctly labeled, and functional both before and after installing the Sudoku entry, in 100% of verification passes.
+- **SC-006**: After reinstalling or upgrading the package at least once, 100% of test installs show exactly one "Sudoku" entry in "More" — never zero or more than one.
 
 ## Assumptions
 
 - NickelMenu is treated strictly as a prerequisite the player installs separately, following its own well-established community installation process; this feature ships only the menu-entry configuration and launch script that plug into it, not an installer or patch for NickelMenu itself.
 - "More" refers to the Kobo Nickel reading interface's built-in bottom-navigation "More" screen — the same screen that lists Settings and similar on-device items — which is the menu location the prerequisite tool's standard configuration targets.
-- The existing KFMon-based install and cover-tap launch (delivered in the `001-kobo-sudoku` feature) is not removed or replaced by this feature; this feature adds an additional, more discoverable launch path. Both may be installed and used at the same time.
+- The existing KFMon-based install and cover-tap launch (delivered in the `001-kobo-sudoku` feature) is not removed by this feature; it remains installable and functional, but documentation repositions it as a legacy/alternative path once this feature ships, with the NickelMenu "More" entry becoming the primary recommended method. Both may be installed and used at the same time.
 - The confirmed target device for this feature is a Kobo Libra Colour on firmware 4.5, connected to a computer as a USB mass-storage drive; other Kobo models/firmware versions are best-effort, matching the existing project stance.
 - The phrase "there are some settings and program alright" in the feature request is read as the player observing that the "More" screen already contains Settings and other existing items today, and confirming it is fine for Sudoku to sit alongside them — not a request for a new in-game settings screen (the game's existing Settings screen from `001-kobo-sudoku` is unaffected and out of scope for this feature).
 - No new gameplay functionality is introduced by this feature; it is solely an additional installation/launch integration.

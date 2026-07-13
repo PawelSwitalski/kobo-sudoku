@@ -1,0 +1,3 @@
+# Optional NickelMenu entry — firmware 4.x only (NickelMenu does not work on
+# FW 5.x; KFMon is the primary launcher). To use: copy this file to .adds/nm/
+menu_item : main : Sudoku : cmd_spawn : quiet : exec /mnt/onboard/.adds/sudoku/start.sh

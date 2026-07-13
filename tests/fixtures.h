@@ -1,6 +1,5 @@
 #pragma once
 #include "core/generator.h"
-#include <cstring>
 
 // Shared test fixture: the classic puzzle from contracts/save-format.md.
 inline sudoku::core::Puzzle fixturePuzzle() {

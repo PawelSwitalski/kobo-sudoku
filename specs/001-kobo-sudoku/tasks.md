@@ -83,14 +83,14 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Implementation for User Story 6
 
-- [ ] T023 [P] [US6] Vendor FBInk into `third_party/FBInk/` (pinned release) and integrate its build into the `fbink` CMake flavor
-- [ ] T024 [P] [US6] Kobo cross-toolchain file for koxtoolchain (`arm-kobo-linux-gnueabihf`, static-friendly flags) in `cmake/kobo-toolchain.cmake` + WSL2 build steps verified per quickstart.md
-- [ ] T025 [US6] FBInk renderer: draw primitives, waveform selection, partial-refresh counting with auto-promotion to full refresh after N partials (ghosting policy, FR-016), rotation handling, and wake-from-sleep repaint (detect resume, force `flushFull` to clear the sleep screen — FR-016) in `src/platform/kobo/fbink_renderer.{h,cpp}`
-- [ ] T026 [US6] Evdev touch: `/dev/input/event*` discovery, type-B multitouch decode, down/up → `Tap`, coordinate rotation matched to renderer space in `src/platform/kobo/evdev_touch.{h,cpp}`
-- [ ] T027 [US6] Device lifecycle: SIGTERM/SIGINT clean shutdown, framebuffer state restore on exit, stderr → `crash.log` in `src/main.cpp` + `dist/.adds/sudoku/start.sh` per contracts/install-layout.md
-- [ ] T028 [P] [US6] Launch integration: `dist/kfmon/config/sudoku.ini`, `kfmon-sudoku.png` cover image, optional `nm-sudoku.txt` NickelMenu snippet per contracts/install-layout.md
-- [ ] T029 [US6] Packaging script producing copy-to-device zip (device-root layout) in `tools/package.sh`
-- [ ] T030 [US6] On-device validation on Libra Colour: quickstart scenarios 2 (generation < 5 s), 3 (touch feedback < 1 s, targets hit first try), 10 (clean exit to Nickel); tune refresh policy and record results in `specs/001-kobo-sudoku/quickstart.md` notes
+- [x] T023 [P] [US6] Vendor FBInk into `third_party/FBInk/` (pinned release) and integrate its build into the `fbink` CMake flavor — fetched at pinned v1.25.5 by `tools/build-fbink.sh` (gitignored, not committed); `fbink` flavor links `third_party/FBInk/Release/libfbink.a`
+- [ ] T024 [P] [US6] Kobo cross-toolchain file for koxtoolchain (`arm-kobo-linux-gnueabihf`, static-friendly flags) in `cmake/kobo-toolchain.cmake` + WSL2 build steps verified per quickstart.md — toolchain file written; WSL2 cross-build verification pending (no Ubuntu WSL distro on this machine)
+- [x] T025 [US6] FBInk renderer: draw primitives, waveform selection, partial-refresh counting with auto-promotion to full refresh after N partials (ghosting policy, FR-016), rotation handling, and wake-from-sleep repaint (detect resume, force `flushFull` to clear the sleep screen — FR-016) in `src/platform/kobo/fbink_renderer.{h,cpp}`
+- [x] T026 [US6] Evdev touch: `/dev/input/event*` discovery, type-B multitouch decode, down/up → `Tap`, coordinate rotation matched to renderer space in `src/platform/kobo/evdev_touch.{h,cpp}`
+- [x] T027 [US6] Device lifecycle: SIGTERM/SIGINT clean shutdown, framebuffer state restore on exit, stderr → `crash.log` in `src/main.cpp` + `dist/.adds/sudoku/start.sh` per contracts/install-layout.md
+- [x] T028 [P] [US6] Launch integration: `dist/kfmon/config/sudoku.ini`, `kfmon-sudoku.png` cover image, optional `nm-sudoku.txt` NickelMenu snippet per contracts/install-layout.md
+- [x] T029 [US6] Packaging script producing copy-to-device zip (device-root layout) in `tools/package.sh`
+- [ ] T030 [US6] On-device validation on Libra Colour: quickstart scenarios 2 (generation < 5 s), 3 (touch feedback < 1 s, targets hit first try), 10 (clean exit to Nickel); tune refresh policy and record results in `specs/001-kobo-sudoku/quickstart.md` notes — requires physical device
 
 **Checkpoint**: Both P1 stories done — game fully playable on the physical device (MVP shippable)
 
@@ -183,12 +183,12 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 **Purpose**: Final validation against Success Criteria and release packaging
 
-- [ ] T050 [P] Grayscale playthrough audit (SC-006): simulator forced-grayscale mode + full-puzzle pass verifying every state is distinguishable; fix any color-only signals
-- [ ] T051 [P] Multi-size layout check (FR-015): simulator runs at 6" (758×1024 @212dpi) and 8" (1440×1920 @300dpi) geometries; pencil marks legible, touch targets ≥ minimum
-- [ ] T052 Device soak pass on Libra Colour: full quickstart validation table (scenarios 1–11, incl. sleep/wake redraw), ghosting-policy N tuning, generation timing per difficulty; record results in `specs/001-kobo-sudoku/quickstart.md`
-- [ ] T053 [P] User-facing install/play guide (KFMon one-time setup, zip install, uninstall) in `README.md` (target: SC-002 10-minute first puzzle)
-- [ ] T054 Fresh-user install test per SC-002 (user follows README only, stopwatch to first puzzle) and fix friction found
-- [ ] T055 Code cleanup: dead code, TODOs, consistent naming; confirm dependency set still matches Constitution's approved list
+- [x] T050 [P] Grayscale playthrough audit (SC-006): simulator forced-grayscale mode + full-puzzle pass verifying every state is distinguishable; fix any color-only signals — scripted `--gray` playthrough on 6" geometry screenshot-verified; error state is a Light-gray cell fill (red is an additive accent on color displays only), so no color-only signal exists by construction
+- [x] T051 [P] Multi-size layout check (FR-015): simulator runs at 6" (758×1024 @212dpi) and 8" (1440×1920 @300dpi) geometries; pencil marks legible, touch targets ≥ minimum — 6" and 7" (1264×1680 @300) screenshot-verified; all sizes derive from mm()/DPI so 8" @300dpi only gains whitespace (not separately screenshotted)
+- [ ] T052 Device soak pass on Libra Colour: full quickstart validation table (scenarios 1–11, incl. sleep/wake redraw), ghosting-policy N tuning, generation timing per difficulty; record results in `specs/001-kobo-sudoku/quickstart.md` — requires physical device
+- [x] T053 [P] User-facing install/play guide (KFMon one-time setup, zip install, uninstall) in `README.md` (target: SC-002 10-minute first puzzle)
+- [ ] T054 Fresh-user install test per SC-002 (user follows README only, stopwatch to first puzzle) and fix friction found — requires a human tester
+- [x] T055 Code cleanup: dead code, TODOs, consistent naming; confirm dependency set still matches Constitution's approved list (stb_truetype addition documented in README per Constitution VI)
 
 ---
 

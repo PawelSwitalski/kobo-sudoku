@@ -17,8 +17,6 @@ struct SoftCanvas::FontData {
 
 namespace {
 
-std::shared_ptr<SoftCanvas::FontData> loadFont(const std::string& path);
-
 // Maps the accent to RGB on color displays; falls back to the gray shade
 // otherwise so no meaning is ever lost without color (FR-014).
 void resolveColor(Gray shade, Color accent, bool colorDisplay, uint8_t& r, uint8_t& g,
@@ -41,9 +39,6 @@ int nextCodepoint(std::string_view s, size_t& i) {
     return cp;
 }
 
-}  // namespace
-
-namespace {
 std::shared_ptr<SoftCanvas::FontData> loadFont(const std::string& path) {
     std::FILE* f = std::fopen(path.c_str(), "rb");
     if (!f) return nullptr;
@@ -62,6 +57,7 @@ std::shared_ptr<SoftCanvas::FontData> loadFont(const std::string& path) {
     stbtt_GetFontVMetrics(&fd->info, &fd->ascent, &fd->descent, &fd->lineGap);
     return fd;
 }
+
 }  // namespace
 
 bool SoftCanvas::init(int width, int height, const std::string& fontPath,

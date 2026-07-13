@@ -25,6 +25,9 @@ compile_commands.json
 # Packaged output
 dist/*.zip
 
+# Fetched by tools/build-fbink.sh (pinned there, not committed)
+third_party/FBInk/
+
 # IDE / editor
 .vscode/
 .idea/

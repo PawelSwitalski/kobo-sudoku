@@ -32,18 +32,18 @@ Add a "Sudoku" entry to the Kobo's built-in "More" screen (the bottom-nav menu t
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-Evaluated against Constitution v1.0.0 (ratified 2026-07-12):
+Evaluated against Constitution v1.1.0 (ratified 2026-07-12, amended 2026-07-13):
 
 | Principle | Status | Evidence in this plan |
 |---|---|---|
 | I. Portable core, thin platform layer | ✅ Pass (N/A) | No core or platform code touched; reuses existing `Renderer`/`TouchInput` backends and `start.sh` unchanged |
 | II. E-ink-first, grayscale-first UX | ✅ Pass (N/A) | No UI changes; the launch surface is Nickel's own "More" screen, not this app's UI |
 | III. Host-testable correctness | ✅ Pass (N/A) | No core logic added; nothing new for the doctest suite to cover |
-| IV. Firmware-agnostic device integration | ⚠️ Amendment recommended | The design stays within stable, community-proven surfaces — NickelMenu is the same firmware-4.x-only, non-private-API mechanism 001's research already vetted (R3); no new firmware risk. But the constitution's current wording ("KFMon primary...NickelMenu configs as optional extras only") is narrower than spec FR-010, which requires documenting NickelMenu as the *primary* recommended path. See Complexity Tracking. |
+| IV. Firmware-agnostic device integration | ✅ Pass | NickelMenu remains a stable, community-proven, non-private-API surface (001 research R3); documenting it as the primary launch path is now explicitly permitted by Principle IV v1.1.0, provided KFMon remains available as the firmware-5.x-compatible fallback — which it does (FR-008, US2 Scenario 3). |
 | V. Never lose the player's progress | ✅ Pass (N/A) | Same binary, same save files, same atomic-write persistence as 001; launch path has no bearing on save integrity |
 | VI. Simplicity, minimal dependencies | ✅ Pass | NickelMenu is not vendored or linked (same precedent as KFMon, already an unvendored external prerequisite in 001); no new build-time dependency introduced |
 
-**Post-Phase-1 re-check**: Design still introduces no new code dependency, no new architectural seam, and no core/platform changes. The only open item is the Principle IV wording gap, tracked below and recommended for a `/speckit-constitution` amendment; it does not block this plan because the underlying technical constraint (firmware-agnostic, community-proven surfaces only) is fully satisfied — only the *documentation-priority* phrasing needs updating to match. Pass, with that follow-up noted.
+**Post-Phase-1 re-check**: Design still introduces no new code dependency, no new architectural seam, and no core/platform changes. All six principles pass cleanly under Constitution v1.1.0. (The Principle IV wording gap flagged during initial planning was resolved by amending the constitution to v1.1.0 — see Complexity Tracking for the historical record.)
 
 ## Project Structure
 
@@ -85,6 +85,10 @@ README.md                            # UPDATED: NickelMenu install becomes the l
 
 > Fill ONLY if Constitution Check has violations that must be justified
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|---|---|---|
-| Constitution Principle IV wording ("NickelMenu configs as optional extras only") is narrower than this plan's documentation priority (FR-010: NickelMenu path documented as primary) | The user explicitly asked for an own solution based on NickelMenu, placed in the native "More" menu, specifically because it is more discoverable than the existing cover-tap trigger — that discoverability gain is the entire value of this feature, and it only materializes if the docs actually lead with it | Keeping KFMon documented as primary while shipping the NickelMenu entry as an undocumented or footnote option would contradict spec FR-010 and defeat the discoverability goal; the technical constraint the principle actually protects (no private-firmware APIs, community-proven surfaces only) is still fully honored, so changing the *wording* to allow either path to be documented as primary is the smaller, correct fix rather than reworking this feature's scope. Recommend running `/speckit-constitution` to update Principle IV's wording (and the Technology Constraints "Launcher" line) before or alongside implementation. |
+No open violations. During initial planning (Constitution v1.0.0), Principle IV's wording
+("NickelMenu configs as optional extras only") was narrower than this plan's documentation
+priority (FR-010: NickelMenu path documented as primary). That gap was resolved by amending the
+constitution to v1.1.0 (2026-07-13), which permits either KFMon or NickelMenu to be documented as
+a feature's primary launch path, provided a firmware-5.x-compatible mechanism (KFMon) always
+remains available — which it does here (FR-008, US2 Scenario 3). The Constitution Check above
+reflects the post-amendment, fully-passing state.

@@ -1,20 +1,25 @@
 <!--
 Sync Impact Report
 ==================
-Version change: (template, unversioned) → 1.0.0 (initial ratification)
-Modified principles: n/a (initial adoption — all principles new)
-Added sections:
-  - Core Principles (I–VI)
-  - Technology Constraints
-  - Development Workflow & Quality Gates
-  - Governance
-Removed sections: none (template placeholders replaced)
+Version change: 1.0.0 → 1.1.0
+Modified principles:
+  - IV. Firmware-Agnostic Device Integration — wording loosened: NickelMenu may now be documented
+    as a feature's primary, recommended launch path alongside KFMon (previously "NickelMenu
+    configs as optional extras only"). The substantive constraint is unchanged: no private
+    firmware APIs, and a firmware-4.x/5.x-compatible path (KFMon, today) MUST always remain
+    available and documented, since NickelMenu alone does not work on firmware 5.x.
+Added sections: none
+Removed sections: none
+Technology Constraints: "Launcher: KFMon primary" updated to reflect both KFMon and NickelMenu
+  as approved launcher mechanisms, with KFMon required as the firmware-5.x-compatible fallback.
 Templates requiring updates:
   - ✅ .specify/templates/plan-template.md — generic "Constitution Check" gate, compatible as-is
   - ✅ .specify/templates/spec-template.md — no constitution-specific sections required, compatible as-is
-  - ✅ .specify/templates/tasks-template.md — tests are opt-in there; Principle III opts this project in
-    for core-logic tests (task generation MUST include them)
-  - ✅ specs/001-kobo-sudoku/plan.md — Constitution Check section updated to evaluate v1.0.0
+  - ✅ .specify/templates/tasks-template.md — unaffected, no principle count/type change
+  - ✅ specs/002-nickelmenu-integration/plan.md — Constitution Check Principle IV row updated to
+    ✅ Pass under v1.1.0; Complexity Tracking entry marked resolved by this amendment
+  - N/A specs/001-kobo-sudoku/plan.md — left as a historical snapshot evaluating v1.0.0, the
+    version in effect when that feature was planned; not retroactively amended
 Follow-up TODOs: none
 -->
 
@@ -61,12 +66,18 @@ established where tests can actually run.
 The game MUST NOT link against or depend on Kobo's private firmware libraries (libnickel/Qt
 internals) or any firmware-version-specific behavior. Device integration is limited to stable,
 community-proven surfaces: the e-ink framebuffer via FBInk, evdev input, and launch via KFMon
-(with NickelMenu configs as optional extras only). One armhf binary MUST serve all supported
-devices; installation MUST remain plain file copy over USB.
+and/or NickelMenu configs. Either launch mechanism MAY be documented as a feature's primary,
+recommended path, provided a firmware-4.x/5.x-compatible mechanism (KFMon, today) always remains
+available and documented for devices where NickelMenu does not apply — NickelMenu MUST NOT
+become the only supported launch path, since it does not work on firmware 5.x. One armhf binary
+MUST serve all supported devices; installation MUST remain plain file copy over USB.
 
 Rationale: private-API dependencies broke the entire NickelMenu ecosystem on firmware 5.x;
 avoiding them is the difference between "works on my device today" and "works on other Kobos
-across firmware updates".
+across firmware updates". Both KFMon and NickelMenu are themselves community-proven, non-private
+surfaces, so which one a given feature documents as primary is a discoverability choice, not a
+firmware-fragility risk — the risk this principle guards against is preserved by requiring a
+firmware-5.x-compatible path to always remain available.
 
 ### V. Never Lose the Player's Progress
 
@@ -93,7 +104,9 @@ cross-compilation risk and binary-size cost.
 ## Technology Constraints
 
 - Language: C++17. Device builds use koxtoolchain (`arm-kobo-linux-gnueabihf`) under WSL2/Docker.
-- Rendering: FBInk (vendored). Input: raw evdev. Launcher: KFMon primary.
+- Rendering: FBInk (vendored). Input: raw evdev. Launcher: KFMon (required — the
+  firmware-4.x/5.x-compatible fallback) and NickelMenu (approved, firmware-4.x only); either
+  may be documented as a feature's primary launch path per Principle IV.
 - Persistence: JSON via nlohmann/json (vendored, header-only) in `.adds/sudoku/`.
 - Tests: doctest (vendored, header-only), built and run on the host.
 - Approved dependency set is exactly the above plus SDL2 (host-only simulator); additions go
@@ -123,4 +136,4 @@ and wording. Compliance is reviewed at every `/speckit-plan` Constitution Check 
 after design; violations must be justified in the plan's Complexity Tracking table or the
 design changed.
 
-**Version**: 1.0.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-12
+**Version**: 1.1.0 | **Ratified**: 2026-07-12 | **Last Amended**: 2026-07-13

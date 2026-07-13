@@ -15,12 +15,35 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+# --- Portable core: pure logic, no OS calls (Constitution I) ---
+add_library(sudoku_core STATIC
+  src/core/board.cpp
+  src/core/solver.cpp
+  src/core/difficulty.cpp
+  src/core/generator.cpp
+  src/core/session.cpp
+  src/core/stats.cpp
+)
+target_include_directories(sudoku_core PUBLIC src third_party)
+
+# --- Persistence: atomic JSON files (Constitution V) ---
+add_library(sudoku_persist STATIC
+  src/persist/paths.cpp
+  src/persist/store.cpp
+)
+target_link_libraries(sudoku_persist PUBLIC sudoku_core)
+
 if(BUILD_TESTS)
   enable_testing()
   add_executable(sudoku_tests
     tests/main.cpp
     tests/test_smoke.cpp
+    tests/test_rules.cpp
+    tests/test_pencilmarks.cpp
+    tests/test_generator.cpp
+    tests/test_difficulty.cpp
+    tests/test_persist.cpp
   )
-  target_include_directories(sudoku_tests PRIVATE src third_party)
+  target_link_libraries(sudoku_tests PRIVATE sudoku_core sudoku_persist)
   add_test(NAME core COMMAND sudoku_tests)
 endif()

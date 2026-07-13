@@ -56,17 +56,17 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Tests for User Story 1 (Constitution III — write first, must fail, then implement)
 
-- [ ] T012 [P] [US1] Board rules tests: given immutability, value set/clear, peer computation, completion detection in `tests/test_rules.cpp`
-- [ ] T013 [P] [US1] Generator property tests: 500 seeded puzzles per difficulty → exactly one solution (SC-004), givens ⊂ solution, determinism per seed in `tests/test_generator.cpp`
-- [ ] T014 [P] [US1] Difficulty grading tests: known Easy/Medium/Hard fixtures grade in-band; technique ladder ordering in `tests/test_difficulty.cpp`
+- [x] T012 [P] [US1] Board rules tests: given immutability, value set/clear, peer computation, completion detection in `tests/test_rules.cpp`
+- [x] T013 [P] [US1] Generator property tests: 500 seeded puzzles per difficulty → exactly one solution (SC-004), givens ⊂ solution, determinism per seed in `tests/test_generator.cpp`
+- [x] T014 [P] [US1] Difficulty grading tests: known Easy/Medium/Hard fixtures grade in-band; technique ladder ordering in `tests/test_difficulty.cpp`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Board model: 81 cells (`Given|Entry|Empty`, value), row/col/box peer helpers in `src/core/board.{h,cpp}` per data-model.md
-- [ ] T016 [P] [US1] Solver: randomized-backtracking grid filler + `countSolutions(grid, limit=2)` early-exit counter in `src/core/solver.{h,cpp}`
-- [ ] T017 [US1] Logical-technique solver (naked/hidden singles, locked candidates, naked pairs) + `grade()` mapping to Easy/Medium/Hard in `src/core/difficulty.{h,cpp}` (research R6)
-- [ ] T018 [US1] Generator: dig-holes-with-uniqueness-check pipeline, regenerate until requested band, `Puzzle{givens,solution,difficulty,seed}` in `src/core/generator.{h,cpp}` (must meet SC-001 < 5 s; target < 500 ms)
-- [ ] T019 [US1] Session: cell-first mutators `commitDigit`/`clearCell` returning `ChangeSet`, given-cell no-ops, `isComplete()`, `tick()` elapsed-time accumulator in `src/core/session.{h,cpp}` per contracts/core-model.md
+- [x] T015 [P] [US1] Board model: 81 cells (`Given|Entry|Empty`, value), row/col/box peer helpers in `src/core/board.{h,cpp}` per data-model.md
+- [x] T016 [P] [US1] Solver: randomized-backtracking grid filler + `countSolutions(grid, limit=2)` early-exit counter in `src/core/solver.{h,cpp}`
+- [x] T017 [US1] Logical-technique solver (naked/hidden singles, locked candidates, naked pairs) + `grade()` mapping to Easy/Medium/Hard in `src/core/difficulty.{h,cpp}` (research R6)
+- [x] T018 [US1] Generator: dig-holes-with-uniqueness-check pipeline, regenerate until requested band, `Puzzle{givens,solution,difficulty,seed}` in `src/core/generator.{h,cpp}` (must meet SC-001 < 5 s; target < 500 ms)
+- [x] T019 [US1] Session: cell-first mutators `commitDigit`/`clearCell` returning `ChangeSet`, given-cell no-ops, `isComplete()`, `tick()` elapsed-time accumulator in `src/core/session.{h,cpp}` per contracts/core-model.md
 - [ ] T020 [US1] Board view widget: 9×9 grid with thick 3×3 boundaries, bold givens vs normal entries, selection border, per-cell dirty rects for partial refresh in `src/ui/widgets.{h,cpp}` (stretch, may skip: tapping a filled cell highlights same-digit cells — spec edge case "may")
 - [ ] T021 [US1] Game screen: board + always-visible 1–9 pad + clear button, cell-first flow, busy indicator during generation, completion dialog in `src/ui/screens/game_screen.{h,cpp}`
 - [ ] T022 [US1] Menu screen: New Game → difficulty picker (Easy/Medium/Hard), Exit; wire into app shell in `src/ui/screens/menu_screen.{h,cpp}`
@@ -104,11 +104,11 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Tests for User Story 2 (Constitution III)
 
-- [ ] T031 [P] [US2] Pencil-mark tests: bitmask slots, toggle on/off, marks-cleared-on-commit (FR-006), peer auto-cleanup incl. ChangeSet contents (FR-006a), marks only on empty cells in `tests/test_pencilmarks.cpp`
+- [x] T031 [P] [US2] Pencil-mark tests: bitmask slots, toggle on/off, marks-cleared-on-commit (FR-006), peer auto-cleanup incl. ChangeSet contents (FR-006a), marks only on empty cells in `tests/test_pencilmarks.cpp`
 
 ### Implementation for User Story 2
 
-- [ ] T032 [US2] Core marks: 9-bit `marks` on Cell, `toggleMark()`, commit-time own-cell clear + peer cleanup with full ChangeSet in `src/core/board.{h,cpp}` and `src/core/session.{h,cpp}`
+- [x] T032 [US2] Core marks: 9-bit `marks` on Cell, `toggleMark()`, commit-time own-cell clear + peer cleanup with full ChangeSet in `src/core/board.{h,cpp}` and `src/core/session.{h,cpp}`
 - [ ] T033 [US2] Mark rendering: small digits at fixed 3×3 in-cell slots (1–3 top / 4–6 middle / 7–9 bottom), legible at smallest supported cell size in `src/ui/widgets.{h,cpp}` (board view)
 - [ ] T034 [US2] Pencil-mode toggle on the game screen: mode button with clear visual state; pad taps route to `toggleMark` in pencil mode in `src/ui/screens/game_screen.{h,cpp}`
 
@@ -124,13 +124,13 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Tests for User Story 4 (Constitution III)
 
-- [ ] T035 [P] [US4] Persistence tests: Session ⇄ JSON round-trip (sparse cells, hints flag, marks), schema validation rejects malformed/inconsistent files, atomic-write temp cleanup in `tests/test_persist.cpp`
+- [x] T035 [P] [US4] Persistence tests: Session ⇄ JSON round-trip (sparse cells, hints flag, marks), schema validation rejects malformed/inconsistent files, atomic-write temp cleanup in `tests/test_persist.cpp`
 
 ### Implementation for User Story 4
 
-- [ ] T036 [P] [US4] Data directory resolution (device `.adds/sudoku/`, host override via env/flag) in `src/persist/paths.{h,cpp}`
-- [ ] T037 [US4] Atomic JSON store: write-temp → fsync → rename, load-with-validation → `std::optional` (invalid ⇒ absent, FR-018) in `src/persist/store.{h,cpp}`
-- [ ] T038 [US4] Session serialization `toJson()`/`fromJson()` exactly per contracts/save-format.md (`save.json` schema v1) in `src/core/session.{h,cpp}`
+- [x] T036 [P] [US4] Data directory resolution (device `.adds/sudoku/`, host override via env/flag) in `src/persist/paths.{h,cpp}`
+- [x] T037 [US4] Atomic JSON store: write-temp → fsync → rename, load-with-validation → `std::optional` (invalid ⇒ absent, FR-018) in `src/persist/store.{h,cpp}`
+- [x] T038 [US4] Session serialization `toJson()`/`fromJson()` exactly per contracts/save-format.md (`save.json` schema v1) in `src/core/session.{h,cpp}`
 - [ ] T039 [US4] Wiring: save after every mutator on the game screen; Continue entry on menu (only when a valid save exists); new-game-discards-save confirmation dialog (FR-019); save+exit on SIGTERM in `src/ui/screens/{menu_screen,game_screen}.cpp`, `src/main.cpp`
 - [ ] T040 [US4] Sleep-time exclusion: only accumulate active time into `elapsedSeconds` (wall-clock deltas capped/paused when no events — device sleep must not count, per spec edge case) in `src/core/session.{h,cpp}` + app loop
 
@@ -146,11 +146,11 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Tests for User Story 3 (Constitution III)
 
-- [ ] T041 [P] [US3] Error & hint tests: `isError` true iff entry ≠ solution, hint targets empty-or-wrong cell only, hint increments counter + sets `fromHint`, hint on complete board is a no-op in `tests/test_rules.cpp` (extend)
+- [x] T041 [P] [US3] Error & hint tests: `isError` true iff entry ≠ solution, hint targets empty-or-wrong cell only, hint increments counter + sets `fromHint`, hint on complete board is a no-op in `tests/test_rules.cpp` (extend)
 
 ### Implementation for User Story 3
 
-- [ ] T042 [US3] Core: derived `isError(cell)`, `applyHint()` per contracts/core-model.md in `src/core/session.{h,cpp}`
+- [x] T042 [US3] Core: derived `isError(cell)`, `applyHint()` per contracts/core-model.md in `src/core/session.{h,cpp}`
 - [ ] T043 [US3] UI: grayscale-safe error rendering (cell shading + digit style — no color-only signal, Constitution II), hint button with "nothing to do" feedback, hint-cell marker, hints count on completion dialog (FR-009) in `src/ui/widgets.{h,cpp}` + `src/ui/screens/game_screen.{h,cpp}`
 
 **Checkpoint**: Assists complete; mistakes surface immediately and hints unstick the player
@@ -165,7 +165,7 @@ Single project at repository root per plan.md: `src/`, `tests/`, `third_party/`,
 
 ### Tests for User Story 5 (Constitution III)
 
-- [ ] T044 [P] [US5] Stats/settings tests: completion-only updates, best/average math, hidden-timer completions still recorded (FR-011/FR-012), defaults on missing/corrupt files in `tests/test_persist.cpp` (extend)
+- [x] T044 [P] [US5] Stats/settings tests: completion-only updates, best/average math, hidden-timer completions still recorded (FR-011/FR-012), defaults on missing/corrupt files in `tests/test_persist.cpp` (extend)
 
 ### Implementation for User Story 5
 

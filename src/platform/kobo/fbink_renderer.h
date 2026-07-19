@@ -18,6 +18,7 @@ public:
     DisplayInfo info() const override { return info_; }
     void flushPartial(Rect r) override;
     void flushFull() override;
+    void setGhostingInterval(int n) override;
 
 private:
     void pushRegion(Rect r, bool flash);
@@ -25,7 +26,7 @@ private:
     int fbfd_ = -1;
     DisplayInfo info_{};
     int partialCount_ = 0;
-    int ghostingPartials_ = 12;  // tunable on device (quickstart scenario 11 / T052)
+    int ghostingPartials_ = 12;  // set from Settings at startup (T052)
 };
 
 }  // namespace sudoku

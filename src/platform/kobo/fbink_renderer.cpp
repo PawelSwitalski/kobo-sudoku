@@ -1,5 +1,6 @@
 #include "platform/kobo/fbink_renderer.h"
 
+#include <climits>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -44,11 +45,6 @@ bool FbinkRenderer::init(const std::string& assetsDir) {
     // Color panels (Kaleido: Libra/Clara Colour) run a 32bpp fb under Nickel;
     // mono devices run 8bpp. Verified on device in T030.
     info_.color = state.bpp >= 24;
-
-    if (const char* n = getenv("SUDOKU_GHOSTING_N"); n && *n) {
-        int v = std::atoi(n);
-        if (v > 0) ghostingPartials_ = v;  // field tuning without rebuild (T052)
-    }
 
     return canvas_.init(info_.width, info_.height, assetsDir + "/DejaVuSans.ttf",
                         assetsDir + "/DejaVuSans-Bold.ttf");
@@ -99,6 +95,10 @@ void FbinkRenderer::flushPartial(Rect r) {
 void FbinkRenderer::flushFull() {
     partialCount_ = 0;
     pushRegion({0, 0, canvas_.width(), canvas_.height()}, true);
+}
+
+void FbinkRenderer::setGhostingInterval(int n) {
+    ghostingPartials_ = n > 0 ? n : INT_MAX;
 }
 
 }  // namespace sudoku

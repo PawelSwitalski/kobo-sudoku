@@ -54,6 +54,7 @@ std::string Settings::toJson() const {
     }
     j["schemaVersion"] = 1;
     j["showTimer"] = showTimer;
+    j["fullRefreshEvery"] = fullRefreshEvery;
     return j.dump();
 }
 
@@ -63,8 +64,10 @@ Settings Settings::fromJson(const std::string& text) {
         throw std::runtime_error("invalid settings: schemaVersion");
     Settings s;
     s.showTimer = j.value("showTimer", true);
+    s.fullRefreshEvery = j.value("fullRefreshEvery", 10);
     j.erase("schemaVersion");
     j.erase("showTimer");
+    j.erase("fullRefreshEvery");
     if (!j.empty()) s.extraJson_ = j.dump();
     return s;
 }

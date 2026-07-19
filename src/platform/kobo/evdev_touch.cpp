@@ -78,14 +78,27 @@ std::optional<Tap> EvdevTouch::waitForTap(int timeoutMs) {
     int rawX = -1, rawY = -1;
     bool sawContact = false, lifted = false;
 
+    auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(timeoutMs);
+
     while (true) {
+        int remaining = static_cast<int>(
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+                deadline - std::chrono::steady_clock::now())
+                .count());
+        // A held touch, a slow drag, or sensor noise can keep producing
+        // events without ever completing a down+up cycle; without capping
+        // to the caller's original budget here, that would block the main
+        // loop (and its idle-exit check) far longer than timeoutMs.
+        if (remaining <= 0) return std::nullopt;
+
         pollfd pfd{fd_, POLLIN, 0};
-        int rc = poll(&pfd, 1, timeoutMs);
+        int rc = poll(&pfd, 1, remaining);
         if (rc <= 0) return std::nullopt;  // timeout, or EINTR (SIGTERM path)
 
         input_event ev[32];
         ssize_t n = read(fd_, ev, sizeof ev);
         if (n <= 0) return std::nullopt;
+        lastActivity_ = std::chrono::steady_clock::now();
 
         for (size_t k = 0; k < static_cast<size_t>(n) / sizeof(input_event); ++k) {
             const input_event& e = ev[k];

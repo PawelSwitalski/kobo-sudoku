@@ -60,6 +60,11 @@ public:
     // partials) lives in the device backend, not in UI code.
     virtual void flushPartial(Rect r) = 0;
     virtual void flushFull() = 0;
+
+    // User-tunable ghosting policy (Settings screen): n <= 0 disables
+    // auto-promotion. No-op on backends without a ghosting concept (e.g.
+    // the desktop simulator).
+    virtual void setGhostingInterval(int /*n*/) {}
 };
 
 inline Rect Rect::unite(const Rect& o) const {

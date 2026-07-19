@@ -1,4 +1,6 @@
 #pragma once
+#include <chrono>
+
 #include "platform/input.h"
 #include "platform/renderer.h"
 
@@ -21,11 +23,18 @@ public:
     bool init(const DisplayInfo& display);
     std::optional<Tap> waitForTap(int timeoutMs) override;
 
+    // Timestamp of the most recent raw input activity, even if it never
+    // formed a complete tap (a stray touch, a drag, sensor noise while
+    // resting a finger). Idle-exit uses this so any touch counts, not just
+    // ones that land as a clean down+up cycle.
+    std::chrono::steady_clock::time_point lastActivity() const { return lastActivity_; }
+
 private:
     int fd_ = -1;
     int rawMinX_ = 0, rawMaxX_ = 0, rawMinY_ = 0, rawMaxY_ = 0;
     int viewW_ = 0, viewH_ = 0;
     bool swapXY_ = false, mirrorX_ = false, mirrorY_ = false, debug_ = false;
+    std::chrono::steady_clock::time_point lastActivity_ = std::chrono::steady_clock::now();
 };
 
 }  // namespace sudoku

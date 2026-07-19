@@ -4,7 +4,7 @@
 
 namespace sudoku::ui {
 
-// Settings: timer visibility toggle (FR-012).
+// Settings: timer visibility toggle, e-ink full-refresh interval (FR-012).
 class SettingsScreen : public Screen {
 public:
     explicit SettingsScreen(App& app);
@@ -13,8 +13,10 @@ public:
     void onTap(Tap tap) override;
 
 private:
-    Rect timerLabelRect_{};
-    Button timerBtn_, backBtn_;
+    static std::string refreshLabel(int n);
+
+    Rect timerLabelRect_{}, refreshLabelRect_{};
+    Button timerBtn_, refreshBtn_, backBtn_;
 };
 
 }  // namespace sudoku::ui

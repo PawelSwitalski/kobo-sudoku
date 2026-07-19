@@ -221,6 +221,7 @@ int main(int argc, char** argv) {
 
 #if defined(SUDOKU_BACKEND_SDL) || defined(SUDOKU_BACKEND_FBINK)
     AppImpl app(renderer, theme, paths, opt.reveal);
+    renderer.setGhostingInterval(app.settings().fullRefreshEvery);
     app.push(std::make_unique<sudoku::ui::MenuScreen>(app));
     app.consumeNavDirty();
     app.top()->draw();
@@ -289,10 +290,21 @@ int main(int argc, char** argv) {
             screen->onTap(*tap);
         } else {
             screen->onTick(0);
-            if (idleExitMs > 0 &&
-                std::chrono::duration_cast<std::chrono::milliseconds>(nowSteady - lastTapSteady)
-                        .count() >= idleExitMs)
+#if defined(SUDOKU_BACKEND_FBINK)
+            // Any touchscreen activity counts, not just a completed tap (a
+            // stray touch, a drag, or sensor noise while resting a finger
+            // never reaches screen->onTap otherwise, but the user is still
+            // clearly present).
+            if (touch.lastActivity() > lastTapSteady) lastTapSteady = touch.lastActivity();
+#endif
+            int64_t idleMs = std::chrono::duration_cast<std::chrono::milliseconds>(
+                                  nowSteady - lastTapSteady)
+                                  .count();
+            if (idleExitMs > 0 && idleMs >= idleExitMs) {
+                std::fprintf(stderr, "idle-exit: %lld ms since last activity (limit %lld)\n",
+                             static_cast<long long>(idleMs), static_cast<long long>(idleExitMs));
                 app.requestExit();
+            }
         }
 
         if (app.consumeNavDirty()) {

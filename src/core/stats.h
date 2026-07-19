@@ -27,6 +27,9 @@ struct Stats {
 // settings.json (FR-012). Unknown keys are preserved across rewrites.
 struct Settings {
     bool showTimer = true;
+    // Partial refreshes between forced full (flashing) e-ink refreshes, to
+    // clear ghosting. 0 = never force one (only explicit transitions do).
+    int fullRefreshEvery = 10;
 
     std::string toJson() const;
     static Settings fromJson(const std::string& text);  // throws on invalid

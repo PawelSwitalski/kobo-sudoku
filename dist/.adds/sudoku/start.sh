@@ -8,7 +8,6 @@ cd /mnt/onboard/.adds/sudoku || exit 1
 # export SUDOKU_TOUCH_MIRROR_X=1
 # export SUDOKU_TOUCH_MIRROR_Y=1
 # export SUDOKU_TOUCH_DEBUG=1
-# export SUDOKU_GHOSTING_N=12
 # export SUDOKU_IDLE_EXIT_SEC=300   # auto-exit after N seconds idle, 0 disables
 
 # Nickel keeps running in the background otherwise (we only take over touch

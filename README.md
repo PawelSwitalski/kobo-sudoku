@@ -73,6 +73,10 @@ one launches the same game and resumes the same saved progress.
   up with **Continue**.
 - Timer shows whole minutes while playing (exact time on completion); hide it
   under **Settings**.
+- **Settings → Screen refresh**: how many quick partial updates happen
+  before a full flashing refresh clears e-ink ghosting (5 / 10 / 25 /
+  Never). Lower means a cleaner screen but more flashing; Never disables
+  forced full refreshes (screen transitions still flash).
 
 **Sleeping the device:** while the game is running, Nickel (and the power
 button / inactivity sleep it handles) is paused so it can't draw over the

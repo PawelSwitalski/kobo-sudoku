@@ -83,9 +83,13 @@ button / inactivity sleep it handles) is paused so it can't draw over the
 game or steal input — tap **Menu → Exit** first if you want to sleep the
 device immediately. If you just set it down, the game exits on its own
 after 5 minutes of no taps, handing control back to Nickel so its normal
-inactivity/sleep timer resumes (staying frozen indefinitely risks a hard
-power-off instead of a graceful sleep). Tune this with `SUDOKU_IDLE_EXIT_SEC`
+inactivity/sleep timer resumes. Tune this with `SUDOKU_IDLE_EXIT_SEC`
 in `.adds/sudoku/start.sh` (`0` disables it — not recommended).
+
+The launcher also pauses `sickel`, Kobo's watchdog daemon (FW 4.28+):
+it powers the device off when Nickel stops responding, which a paused
+Nickel does — even mid-game, no matter how actively you're tapping.
+Both are resumed when the game exits.
 
 ### Touch calibration
 

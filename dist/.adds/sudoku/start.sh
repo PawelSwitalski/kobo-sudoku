@@ -17,11 +17,19 @@ cd /mnt/onboard/.adds/sudoku || exit 1
 # (and repaint itself) once we're done -- the standard Kobo homebrew pattern.
 # NOTE: while frozen, Nickel can't react to the power button or its own
 # inactivity timer, so the game auto-exits after 5 min idle (see above) to
-# hand control back before some other watchdog forces a hard power-off.
+# hand control back before anything forces a hard power-off.
+#
+# Since FW 4.28 Kobo also runs "sickel", a watchdog that powers the device
+# off/reboots it when nickel stops responding -- which a frozen nickel does,
+# no matter how actively the user is playing. Freeze it first so it never
+# sees nickel unresponsive; thaw it last, after nickel is live again.
+SICKEL_PID=$(pidof sickel)
+[ -n "$SICKEL_PID" ] && kill -STOP "$SICKEL_PID"
 NICKEL_PID=$(pidof nickel)
 [ -n "$NICKEL_PID" ] && kill -STOP "$NICKEL_PID"
 
 ./sudoku 2> crash.log
 
 [ -n "$NICKEL_PID" ] && kill -CONT "$NICKEL_PID"
+[ -n "$SICKEL_PID" ] && kill -CONT "$SICKEL_PID"
 exit 0

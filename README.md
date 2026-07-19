@@ -69,13 +69,45 @@ one launches the same game and resumes the same saved progress.
 - **Hint**: fixes one wrong cell, or fills one empty cell, and marks it with a
   small square. Hints are counted on the completion screen.
 - Wrong digits are shaded immediately (checked against the actual solution).
-- Your game is saved after every single action — power off, sleep, or exit
-  any time and pick it up with **Continue**.
+- Your game is saved after every single action — exit any time and pick it
+  up with **Continue**.
 - Timer shows whole minutes while playing (exact time on completion); hide it
   under **Settings**.
 
-If taps land in the wrong place on your model, see the calibration variables
-in `.adds/sudoku/start.sh` (`SUDOKU_TOUCH_SWAP_XY` / `MIRROR_X` / `MIRROR_Y`).
+**Sleeping the device:** while the game is running, Nickel (and the power
+button / inactivity sleep it handles) is paused so it can't draw over the
+game or steal input — tap **Menu → Exit** first, then sleep normally. This
+also means the device won't auto-sleep from inactivity while a game is open;
+exit if you're setting it down for a while.
+
+### Touch calibration
+
+Kobo touch panels don't all report coordinates in the same orientation as
+the screen. If taps land in the wrong place (e.g. the right edge behaves
+like the bottom), set the matching variables in `.adds/sudoku/start.sh`
+before `./sudoku` runs, uncommenting the ones you need:
+
+```sh
+export SUDOKU_TOUCH_SWAP_XY=1    # swap raw x/y first
+export SUDOKU_TOUCH_MIRROR_X=1   # mirror x after swap
+export SUDOKU_TOUCH_MIRROR_Y=1   # mirror y after swap
+```
+
+Set `SUDOKU_TOUCH_DEBUG=1` too and check `.adds/sudoku/crash.log` after a
+few taps (`tap raw=(..) -> (..)`) to work out which combination you need —
+raw coordinates that span the screen's *height* on what should be the *x*
+axis is the usual sign that `SWAP_XY` is needed.
+
+Confirmed working settings by model (please share yours if you test a new
+one):
+
+| Model | Settings |
+|---|---|
+| Kobo Libra Colour (FW 4.5) | `SUDOKU_TOUCH_SWAP_XY=1`, `SUDOKU_TOUCH_MIRROR_Y=1` |
+
+**Known limitation:** the calibration above assumes the device is held in
+its normal (non-inverted) portrait orientation — the game doesn't read the
+accelerometer, so holding it upside-down currently maps taps incorrectly.
 
 ## Build from source
 

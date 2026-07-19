@@ -50,7 +50,7 @@ void MenuScreen::draw() {
     TextStyle title;
     title.sizePx = t.titlePx;
     title.bold = true;
-    r.drawText(titleRect, state_ == State::Main ? "Kobo Sudoku" : "Choose difficulty", title);
+    r.drawText(titleRect, state_ == State::Main ? "Sudoku" : "Choose difficulty", title);
 
     for (const Button& b : buttons_)
         b.draw(r, t);

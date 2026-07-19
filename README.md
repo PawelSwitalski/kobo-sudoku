@@ -76,9 +76,12 @@ one launches the same game and resumes the same saved progress.
 
 **Sleeping the device:** while the game is running, Nickel (and the power
 button / inactivity sleep it handles) is paused so it can't draw over the
-game or steal input — tap **Menu → Exit** first, then sleep normally. This
-also means the device won't auto-sleep from inactivity while a game is open;
-exit if you're setting it down for a while.
+game or steal input — tap **Menu → Exit** first if you want to sleep the
+device immediately. If you just set it down, the game exits on its own
+after 5 minutes of no taps, handing control back to Nickel so its normal
+inactivity/sleep timer resumes (staying frozen indefinitely risks a hard
+power-off instead of a graceful sleep). Tune this with `SUDOKU_IDLE_EXIT_SEC`
+in `.adds/sudoku/start.sh` (`0` disables it — not recommended).
 
 ### Touch calibration
 

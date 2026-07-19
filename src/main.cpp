@@ -232,6 +232,22 @@ int main(int argc, char** argv) {
     auto lastWall = std::chrono::system_clock::now();
     uint32_t activeMsAccum = 0;
 
+#if defined(SUDOKU_BACKEND_FBINK)
+    // Nickel is paused for as long as we're in the foreground (start.sh), so
+    // it can't run its own inactivity/sleep timer either. Staying frozen
+    // indefinitely risks a lower-level watchdog forcing a hard power-off
+    // instead of a graceful suspend, so give control back on our own after a
+    // stretch of no taps. Override via env var; 0 disables.
+    int64_t idleExitMs = 300000;  // 5 min
+    if (const char* v = std::getenv("SUDOKU_IDLE_EXIT_SEC"); v && *v) {
+        int sec = std::atoi(v);
+        idleExitMs = sec > 0 ? static_cast<int64_t>(sec) * 1000 : 0;
+    }
+#else
+    int64_t idleExitMs = 0;
+#endif
+    auto lastTapSteady = std::chrono::steady_clock::now();
+
     while (!app.exitRequested() && !g_signalled && !sdlQuit && app.top()) {
         std::optional<sudoku::Tap> tap = touch.waitForTap(kTimeoutMs);
 
@@ -268,10 +284,16 @@ int main(int argc, char** argv) {
             renderer.flushFull();
         }
 
-        if (tap)
+        if (tap) {
+            lastTapSteady = nowSteady;
             screen->onTap(*tap);
-        else
+        } else {
             screen->onTick(0);
+            if (idleExitMs > 0 &&
+                std::chrono::duration_cast<std::chrono::milliseconds>(nowSteady - lastTapSteady)
+                        .count() >= idleExitMs)
+                app.requestExit();
+        }
 
         if (app.consumeNavDirty()) {
             if (!app.top()) break;

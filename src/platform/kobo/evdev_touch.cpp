@@ -1,5 +1,6 @@
 #include "platform/kobo/evdev_touch.h"
 
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -55,6 +56,12 @@ bool EvdevTouch::init(const DisplayInfo& display) {
             close(fd);
             continue;
         }
+        // Nickel keeps running underneath (nothing stops it); without an
+        // exclusive grab it reads the same taps we do, so touches leak
+        // through to the library/Settings behind our screen.
+        if (ioctl(fd, EVIOCGRAB, 1) < 0 && debug_)
+            std::fprintf(stderr, "touch: %s EVIOCGRAB failed: %s\n", path, strerror(errno));
+
         fd_ = fd;
         rawMinX_ = ax.minimum; rawMaxX_ = ax.maximum;
         rawMinY_ = ay.minimum; rawMaxY_ = ay.maximum;

@@ -1,160 +1,63 @@
 # Kobo Sudoku
 
-A native, fully offline sudoku game for Kobo e-readers. Built for the Kobo
-Libra Colour, portable across the Kobo lineup (one ARM binary, geometry
-computed from the screen). Puzzles are generated on the device with a
-guaranteed unique solution and technique-graded difficulty (Easy / Medium /
-Hard).
+A native, fully offline sudoku game for Kobo e-readers.
 
-Features: cell-first touch input, pencil marks (fixed 1-3 / 4-6 / 7-9 in-cell
-layout, auto-removed from peers when you place a digit), immediate error
-marking against the solution, hints, auto-save after every move with resume,
-optional timer and per-difficulty statistics. E-ink friendly: partial
-refreshes for moves, periodic full refreshes against ghosting, no per-second
-timer redraws.
+Built for the Kobo Libra Colour and portable across the Kobo lineup — one
+ARM binary, with screen geometry computed at runtime. Puzzles are generated
+on the device with a guaranteed unique solution and technique-graded
+difficulty (Easy / Medium / Hard). No network, no accounts, no ads.
 
-## Install on your Kobo
+> **Status:** launching from the **NickelMenu** entry is tested on a real
+> device (Kobo Libra Colour, firmware 4.5). The bundled **KFMon** launcher
+> is not yet tested on hardware.
 
-**One-time prerequisite — NickelMenu** (lets Nickel show a custom entry in
-**More**; survives until a firmware update, then just redo this step — the
-same one-time-per-firmware-update pattern as the legacy KFMon setup below,
-if that's familiar from an earlier install):
+## Features
 
-1. Download the latest `KoboRoot.tgz` from the
-   [NickelMenu project](https://pgaskin.github.io/NickelMenu/) (firmware
-   4.x only — confirmed working on a Kobo Libra Colour, firmware 4.5;
-   other firmware versions are best-effort, see the legacy alternative
-   below).
-2. Connect the Kobo over USB, copy `KoboRoot.tgz` into the hidden `.kobo`
-   folder on the device, eject safely. The Kobo reboots and installs it.
+- Cell-first touch input sized for e-ink screens
+- Pencil marks with a fixed in-cell layout (1–3 / 4–6 / 7–9), auto-removed
+  from peers when you place a digit
+- Immediate error marking (checked against the actual solution) and hints
+- Auto-save after every move; resume any time with **Continue**
+- Optional timer and per-difficulty statistics
+- E-ink friendly: partial refreshes for moves, configurable full refreshes
+  against ghosting, no per-second redraws
 
-**Install the game:**
+## Quick start
 
-1. Connect the Kobo over USB (it shows up as a drive, e.g. `D:`).
-2. Extract `kobo-sudoku.zip` onto the drive root (merge the `.adds` folder).
-3. Eject safely and let the Kobo finish importing.
-4. Open **More** (bottom navigation) — a **Sudoku** entry appears alongside
-   Settings and your other items. Tap it to start the game. Tap
-   `Menu → Exit` to go back to your books.
+1. Install [NickelMenu](https://pgaskin.github.io/NickelMenu/) (one-time,
+   per firmware update).
+2. Download `kobo-sudoku.zip` from the
+   [latest release](https://github.com/PawelSwitalski/kobo-sudoku/releases/latest)
+   and extract it onto the Kobo's USB drive root.
+3. Eject, open **More** on the device, tap **Sudoku**.
 
-**Uninstall:** delete `.adds/sudoku/`, `.adds/nm/kobo-sudoku`,
-`.adds/kfmon/config/sudoku.ini` and `kfmon-sudoku.png` from the device.
+Full steps, the KFMon alternative and uninstall: [docs/installation.md](docs/installation.md).
 
-### Legacy alternative: KFMon cover-tap
+## Documentation
 
-Kobo Sudoku can also be launched the way earlier versions worked, via
-[KFMon](https://github.com/NiLuJe/kfmon) and a disguised library cover. No
-extra install step is needed beyond the steps above — the `.adds/kfmon/`
-config and `kfmon-sudoku.png` cover ship in the same zip — only the KFMon
-prerequisite below is new if you don't already have it set up.
-
-1. **One-time prerequisite — KFMon**: download the latest `KoboRoot.tgz`
-   from [KFMon releases](https://github.com/NiLuJe/kfmon/releases) (the
-   "uninstaller-less" package is fine), copy it into `.kobo` on the device,
-   eject. The Kobo reboots and installs it.
-2. After installing the game (steps above), a book called **kfmon-sudoku**
-   appears in your library. Tap its cover — the game starts.
-
-Both methods are independent and can be installed at the same time: either
-one launches the same game and resumes the same saved progress.
-
-## How to play
-
-- Tap a cell, then tap a digit on the pad (cell-first input).
-- **Pencil**: toggles pencil mode — digits become small candidate marks
-  (1-3 top row, 4-6 middle, 7-9 bottom of the cell). Tap a mark's digit again
-  to remove it. Placing a real digit clears that candidate from the row,
-  column and box automatically.
-- **Clear**: empties the selected cell (or its marks).
-- **Hint**: fixes one wrong cell, or fills one empty cell, and marks it with a
-  small square. Hints are counted on the completion screen.
-- Wrong digits are shaded immediately (checked against the actual solution).
-- Your game is saved after every single action — exit any time and pick it
-  up with **Continue**.
-- Timer shows whole minutes while playing (exact time on completion); hide it
-  under **Settings**.
-- **Settings → Screen refresh**: how many quick partial updates happen
-  before a full flashing refresh clears e-ink ghosting (5 / 10 / 25 /
-  Never). Lower means a cleaner screen but more flashing; Never disables
-  forced full refreshes (screen transitions still flash).
-
-**Sleeping the device:** while the game is running, Nickel (and the power
-button / inactivity sleep it handles) is paused so it can't draw over the
-game or steal input — tap **Menu → Exit** first if you want to sleep the
-device immediately. If you just set it down, the game exits on its own
-after 5 minutes of no taps, handing control back to Nickel so its normal
-inactivity/sleep timer resumes. Tune this with `SUDOKU_IDLE_EXIT_SEC`
-in `.adds/sudoku/start.sh` (`0` disables it — not recommended).
-
-The launcher also pauses `sickel`, Kobo's watchdog daemon (FW 4.28+):
-it powers the device off when Nickel stops responding, which a paused
-Nickel does — even mid-game, no matter how actively you're tapping.
-Both are resumed when the game exits.
-
-### Touch calibration
-
-Kobo touch panels don't all report coordinates in the same orientation as
-the screen. If taps land in the wrong place (e.g. the right edge behaves
-like the bottom), set the matching variables in `.adds/sudoku/start.sh`
-before `./sudoku` runs, uncommenting the ones you need:
-
-```sh
-export SUDOKU_TOUCH_SWAP_XY=1    # swap raw x/y first
-export SUDOKU_TOUCH_MIRROR_X=1   # mirror x after swap
-export SUDOKU_TOUCH_MIRROR_Y=1   # mirror y after swap
-```
-
-Set `SUDOKU_TOUCH_DEBUG=1` too and check `.adds/sudoku/crash.log` after a
-few taps (`tap raw=(..) -> (..)`) to work out which combination you need —
-raw coordinates that span the screen's *height* on what should be the *x*
-axis is the usual sign that `SWAP_XY` is needed.
-
-Confirmed working settings by model (please share yours if you test a new
-one):
-
-| Model | Settings |
+| Document | Contents |
 |---|---|
-| Kobo Libra Colour (FW 4.5) | `SUDOKU_TOUCH_SWAP_XY=1`, `SUDOKU_TOUCH_MIRROR_Y=1` |
+| [Installation](docs/installation.md) | Install, launchers (NickelMenu / KFMon), uninstall |
+| [Playing the game](docs/gameplay.md) | Controls, pencil marks, hints, how puzzles are generated and graded |
+| [Settings](docs/settings.md) | In-game settings, launcher options, touch calibration, device files |
+| [Building](docs/building.md) | Host tests, desktop simulator, Kobo cross-build, CI and releases |
 
-**Known limitation:** the calibration above assumes the device is held in
-its normal (non-inverted) portrait orientation — the game doesn't read the
-accelerometer, so holding it upside-down currently maps taps incorrectly.
-
-## Build from source
-
-Host tests and desktop simulator (Windows/Linux/macOS, needs CMake + C++17):
+## Building in short
 
 ```bash
-# unit tests
-cmake -B build/host -DSUDOKU_BACKEND=none -DBUILD_TESTS=ON
-cmake --build build/host --config Release
-ctest --test-dir build/host -C Release
+# unit tests + desktop simulator (Windows/Linux/macOS, CMake + C++17)
+cmake -B build/sim -DSUDOKU_BACKEND=sdl && cmake --build build/sim --config Release
 
-# desktop simulator (SDL2; fetched automatically on MSVC)
-cmake -B build/sim -DSUDOKU_BACKEND=sdl
-cmake --build build/sim --config Release
-build/sim/Release/sudoku --width 1264 --height 1680 --dpi 300
+# device binary (Linux/WSL2 + koxtoolchain)
+tools/build-fbink.sh
+cmake -B build/kobo -DCMAKE_TOOLCHAIN_FILE=cmake/kobo-toolchain.cmake -DSUDOKU_BACKEND=fbink
+cmake --build build/kobo && tools/package.sh build/kobo
 ```
 
-Device build (in WSL2/Linux, needs
-[koxtoolchain](https://github.com/koreader/koxtoolchain)):
+Details in [docs/building.md](docs/building.md).
 
-```bash
-tools/build-fbink.sh                       # fetch + cross-build FBInk (once)
-cmake -B build/kobo -DCMAKE_TOOLCHAIN_FILE=cmake/kobo-toolchain.cmake \
-      -DSUDOKU_BACKEND=fbink
-cmake --build build/kobo
-tools/package.sh build/kobo                # -> dist/kobo-sudoku.zip
-```
+## License
 
-## Dependencies
-
-Per the project constitution (`.specify/memory/constitution.md`), the
-dependency set is deliberately tiny, all vendored: FBInk (device rendering),
-nlohmann/json (persistence), doctest (tests), SDL2 (host simulator only).
-Addition: **stb_truetype** (single header, public domain) rasterizes text for
-the shared software canvas used by *both* backends — FBInk already bundles the
-same header internally, and one shared text path keeps simulator and device
-rendering pixel-identical instead of maintaining two divergent ones.
-
-Fonts: DejaVu Sans (see `dist/.adds/sudoku/assets/FONT-LICENSE.txt`).
+[MIT](LICENSE). Vendored third-party components keep their own licenses:
+FBInk, nlohmann/json, doctest, stb_truetype, SDL2 (simulator only) and the
+DejaVu Sans fonts (`dist/.adds/sudoku/assets/FONT-LICENSE.txt`).

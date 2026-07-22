@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 
+#include "fbink.h"
 #include "platform/canvas_renderer.h"
 
 namespace sudoku {
@@ -27,6 +28,12 @@ private:
     DisplayInfo info_{};
     int partialCount_ = 0;
     int ghostingPartials_ = 12;  // set from Settings at startup (T052)
+
+    // Snapshot of Nickel's screen taken in init(), restored on teardown.
+    // Nickel is SIGSTOPped while we run (start.sh) and does not repaint on
+    // SIGCONT, so we have to put its pixels back ourselves before exiting.
+    FBInkDump nickelDump_{};
+    bool haveNickelDump_ = false;
 };
 
 }  // namespace sudoku

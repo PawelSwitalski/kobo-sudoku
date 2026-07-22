@@ -20,9 +20,25 @@ FBInkConfig baseConfig() {
 
 FbinkRenderer::~FbinkRenderer() {
     if (fbfd_ >= 0) {
-        // Leave the framebuffer as Nickel expects it (FR-017).
+        // Leave the framebuffer as Nickel expects it (FR-017). Nickel is
+        // frozen while we run and does NOT repaint on SIGCONT, so restore the
+        // screen we captured in init() with a flashing refresh; without this
+        // our last frame stays on the panel until the user pokes a menu.
+        if (haveNickelDump_) {
+            FBInkConfig cfg = baseConfig();
+            cfg.is_flashing = true;
+            cfg.wfm_mode = WFM_GC16;
+            if (fbink_restore(fbfd_, &cfg, &nickelDump_) != EXIT_SUCCESS)
+                std::fprintf(stderr, "fbink_restore failed\n");
+        } else {
+            // No snapshot (dump failed, or sunxi): a blank page still beats a
+            // stuck game frame.
+            canvas_.fillRect({0, 0, canvas_.width(), canvas_.height()}, 0xFF, 0xFF, 0xFF);
+            pushRegion({0, 0, canvas_.width(), canvas_.height()}, true);
+        }
         fbink_close(fbfd_);
     }
+    if (haveNickelDump_) fbink_free_dump_data(&nickelDump_);
 }
 
 bool FbinkRenderer::init(const std::string& assetsDir) {
@@ -45,6 +61,16 @@ bool FbinkRenderer::init(const std::string& assetsDir) {
     // Color panels (Kaleido: Libra/Clara Colour) run a 32bpp fb under Nickel;
     // mono devices run 8bpp. Verified on device in T030.
     info_.color = state.bpp >= 24;
+
+    // Snapshot Nickel's screen before we draw anything, so the destructor can
+    // put it back. Skipped on sunxi SoCs (Elipsa/Sage): the fb there is
+    // per-process, so a dump would only capture solid black.
+    if (!state.is_sunxi) {
+        if (fbink_dump(fbfd_, &nickelDump_) == EXIT_SUCCESS)
+            haveNickelDump_ = true;
+        else
+            std::fprintf(stderr, "fbink_dump failed; will blank screen on exit instead\n");
+    }
 
     return canvas_.init(info_.width, info_.height, assetsDir + "/DejaVuSans.ttf",
                         assetsDir + "/DejaVuSans-Bold.ttf");
